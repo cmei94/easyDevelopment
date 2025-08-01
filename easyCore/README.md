@@ -14,3 +14,4 @@ Citizen.CreateThread(function()
     local requestId=EasyCore.Utils.Guid()
     EasyCore.Logger.LogError(GetCurrentResourceName(),requestId, ("%s Hat misst gebaut im Menü %s!"):format(GetPlayerName(PlayerId()), "SpielerMenü"))
 end)
+

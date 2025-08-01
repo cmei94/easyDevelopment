@@ -1,11 +1,12 @@
 fx_version "adamant"
-
-rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aware my resources *will* become incompatible once RedM ships.'
-
 game "gta5"
 lua54 'yes'
 creator "cmei94"
-version "3.0.2"
+version "3.0.3"
+scriptid "easycore"
+
+
+licensekey "HIER IST DEIN LIZENZSCHLÜSSEL"
 
 
 
@@ -26,7 +27,8 @@ client_script {
 }
 
 server_scripts {
-	'server/*.lua',
+	'server/initEasyCore.lua',
+	'server/initValidate.lua',
 	'server/BackgroundServices/*.lua',
 	'server/BusinessLogic/LoggerLogic/EventLog/*.lua',
 	'server/BusinessLogic/LoggerLogic/*.lua',

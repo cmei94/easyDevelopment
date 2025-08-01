@@ -1,8 +1,9 @@
 if not Config then
     Config={}
 end
-Config.EnableVersionCheck=true
 Config.RepositoryPath="easyCore"--%2F for /
+Config.LicenseKey=""
+
 
 --Timeouts
 Config.Timeout={}
