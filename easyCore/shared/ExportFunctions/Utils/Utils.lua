@@ -89,7 +89,21 @@ EasyCore.Utils.GetOrCreate = function (table, key, defaultValue)
     return table[key]
 end
 
+---data encrypt
+---@param data string
+---@param key string
+---@return any
+EasyCore.Utils.Encrypt=function (data, key)
+    return json.decode(XorEncrypt(data, key))
+end
 
+---comment
+---@param encryptedData any
+---@param key any
+---@return string|boolean
+EasyCore.Utils.Decrypt=function (encryptedData, key)
+    return XorDecrypt(json.encode(encryptedData), key)
+end
 
 --#region special for server or client
 if IsDuplicityVersion() then--if true it is server side

@@ -28,7 +28,6 @@ client_script {
 
 server_scripts {
 	'server/initEasyCore.lua',
-	'server/initValidate.lua',
 	'server/BackgroundServices/*.lua',
 	'server/BusinessLogic/LoggerLogic/EventLog/*.lua',
 	'server/BusinessLogic/LoggerLogic/*.lua',
@@ -37,8 +36,7 @@ server_scripts {
 	'server/ExportFunctions/DB/*.lua',
 	'server/ExportFunctions/DirectoryFileManager/*.lua',
 	'server/ExportFunctions/LogAndNotify/*.lua',
-	'server/ExportFunctions/VersionCheck/*.lua',
-	
+	'server/initValidate.lua'
 }
 
 dependencies {
