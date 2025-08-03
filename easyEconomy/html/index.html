@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<meta charset="UTF-8">
+	<head>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+		<link href="https://cdn.jsdelivr.net/npm/simple-datatables@5.0/dist/style.css" rel="stylesheet"> 
+		<link href="style.css" rel="stylesheet">
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+        <script src="https://kit.fontawesome.com/de03e13cb2.js" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/simple-datatables@5.0" crossorigin="anonymous"></script>
+		<script src="scripts.js" type="text/javascript"></script>
+	</head>
+    <body>
+        <div id="displayEconomy" class="wrapperEconomy">
+            <div id="content" class="content bg-dark d-flex">
+                <div class="d-flex flex-column flex-shrink-0 bg-body-tertiary text-bg-dark" style="width: 4.5rem;">
+                    <a class="d-block p-3 link-body-emphasis text-decoration-none " title="Icon-only" data-bs-toggle="tooltip" data-bs-placement="right" >
+                        <img src="images/logo.png" style="max-width: 100%; height: auto;">
+                    </a>
+                    <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+                        <li>
+                            <a href="#" class="nav-link py-3 border-bottom rounded-0 active" title="Products" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Startseite">
+                                <i class="fa-solid fa-list"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link py-3 border-bottom rounded-0" title="Customers" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Kundenprofil">
+                                <i class="fa-solid fa-user"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="dropdown border-top">
+                        <a href="#" class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Logout" onclick="CloseTablet()" >
+                            <i class="fa-solid fa-xmark"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex-grow-1 bg-dark text-light p-3 no-padding-top">
+                    <h2 id="tableItemsTitle" class="text-center mb-4 sticky">Test</h2>
+                        <table  class="table table-dark table-hover table-striped">
+                            <thead>
+                                <tr id="tableEconomyItemsHeader">
+                                    <th scope="col" class="sticky-top col-3 align-middle text-center">Gegenstand</th>
+                                    <th scope="col" class="sticky-top col-2 align-middle"><input type="text" id="searchName" class="form-control" style="width: 150px;" placeholder="Name..."></th>
+                                    <th scope="col" class="sticky-top col-2 align-middle text-center"><input type="text" id="searchCategory" class="form-control mx-auto" style="width: 150px;" placeholder="Kategorie..."></th>
+                                    <th scope="col" id="tableEconomyItemsSellPrize" class="sticky-top col-1 align-middle text-center">Ankaufspreis</th>
+                                    <th scope="col" id="tableEconomyItemsBuyPrize"class="sticky-top col-1 align-middle text-center">Verkaufpreis</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableEconomyItemsBody">
+                                <!-- Hier können Sie Ihre Tabelleneinträge einfügen -->
+                                <tr>
+                                    <td>Eintrag 1</td><td>Name 1</td><td>Kategorie 1</td><td>10</td><td>5</td>
+                                </tr>
+                                <tr>
+                                    <td>Eintrag 2</td><td>Name 2</td><td>Kategorie 2</td><td>20</td><td>10</td>
+                                </tr>
+                                <tr>
+                                    <td>Eintrag 3</td><td>Name 3</td><td>Kategorie 3</td><td>30</td><td>15</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+
