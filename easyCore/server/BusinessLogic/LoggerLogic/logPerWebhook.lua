@@ -1,17 +1,17 @@
---- Summary: Creates a JSON-formatted message (Discord embed) for a webhook based on message type.
+--- Summary: Creates a Discord embed object based on message type.
+--- It no longer returns a full JSON string, but just the embed object.
 ---@param ressourceName string The name of the resource generating the log.
 ---@param requestId string A unique identifier for the request/log entry.
 ---@param message string The actual log message content.
 ---@param messageType string The type of message ('error', 'warning', 'info', 'debug').
----@return string The JSON string representing the Discord embed message.
+---@return table The Lua table representing the Discord embed.
 function CreateWebhookMessage(ressourceName, requestId, message, messageType)
     local currentTime = os.time()
     local now = os.date('%d-%m-%Y %H:%M:%S', currentTime)
 
     local titlePrefix = ""
-    local color = Config.Logger.Color["debug"] -- Default color to debug
+    local color = Config.Logger.Color["debug"] -- Default color
 
-    -- Set title prefix and color based on the message type.
     if messageType == 'error' then
         titlePrefix = "Error in "
         color = Config.Logger.Color["error"]
@@ -21,49 +21,39 @@ function CreateWebhookMessage(ressourceName, requestId, message, messageType)
     elseif messageType == 'info' then
         titlePrefix = "Info in "
         color = Config.Logger.Color["info"]
-    else -- 'debug' or any other unexpected type
+    else -- 'debug'
         titlePrefix = "Debug in "
         color = Config.Logger.Color["debug"]
     end
 
-    -- Return the JSON encoded string for the Discord embed.
-    return json.encode(
-        {embeds={
-                {
-                    author={ name=Config.Logger.AuthorName },
-                    title=titlePrefix..ressourceName,
-                    color=color,
-                    fields={
-                        {
-                            name="RequestId",
-                            value=requestId,
-                            inline=true
-                        },
-                        {
-                            name="Timestamp",
-                            value=now,
-                            inline=true
-                        },
-                        {
-                            name= "LogMessage",
-                            value= message
-                        },
-                    }
-                }
-            }
+    -- Return the embed object.
+    return {
+        author = { name = Config.Logger.AuthorName },
+        title = titlePrefix .. ressourceName,
+        color = color,
+        fields = {
+            {
+                name = "RequestId",
+                value = requestId,
+                inline = true
+            },
+            {
+                name = "Timestamp",
+                value = now,
+                inline = true
+            },
+            {
+                name = "LogMessage",
+                value = message
+            },
         }
-    )
+    }
 end
 
---- Summary: Sends a pre-formatted JSON message to a specified webhook URL.
---- Includes basic error handling for the HTTP request.
+--- Summary: Queues a log message to be sent via the central webhook handler.
+--- It no longer sends the HTTP request directly.
 ---@param webhookUrl string The URL of the Discord webhook.
----@param jsonMessage string The JSON formatted message to send.
-function SendLogPerWebhook(webhookUrl, jsonMessage)
-    -- Perform the HTTP request to send the webhook.
-    PerformHttpRequest(webhookUrl, function(error, text, header)
-        if error ~= 0 then -- 0 means success in FiveM's PerformHttpRequest.
-            print(string.format("Warning: Failed to send webhook to %s. Error code: %d, Response: %s", webhookUrl, error, text))
-        end
-    end, "POST", jsonMessage, {["Content-Type"]="application/json"})
+---@param embedObject table The embed object to be sent.
+function SendLogPerWebhook(webhookUrl, embedObject)
+    QueueWebhookMessage(webhookUrl, embedObject)
 end

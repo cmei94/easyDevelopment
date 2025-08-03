@@ -28,7 +28,7 @@ Config.Logger.ServerLog.TotalLog.Name = "TotalLog" -- Defines the name for the t
 Config.Logger.ServerLog.TotalLog.LogLevel = "debug" -- Sets the minimum log level for the total log file. 'debug'=all ('debug','info','warning','error') 'info'=info and error 'error'=just error
 
 --ENABLE Logs
-Config.Logger.ServerLog.EnableWebhooks=false -- Enables or disables sending standard logs to webhooks.
+Config.Logger.ServerLog.EnableWebhooks=true -- Enables or disables sending standard logs to webhooks.
 Config.Logger.ServerLog.EnableEventWebhooks=false -- Enables or disables sending event-specific logs to webhooks.
 Config.Logger.ServerLog.EnableAutoLogFileDelete=true -- Enables or disables automatic deletion of old log files.
 Config.Logger.ServerLog.EnableAutoLogFileDeleteTimeInHours=7*24 -- Sets the time in hours after which log files will be automatically deleted. Minimum is 24 hours.
