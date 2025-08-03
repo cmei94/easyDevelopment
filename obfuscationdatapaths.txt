@@ -1,1 +1,4 @@
-easyCore/server/initValidate.lua
+easyCore\server\initValidate.lua
+
+easyEconomy\server\init\db_init.lua
+easyEconomy\server\init\db_initHelper.lua
