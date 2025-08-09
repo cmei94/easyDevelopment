@@ -1,6 +1,3 @@
-easyEconomy - Dokumentation / Documentation
-===========================================
-
 Dieses Dokument ist in Deutsch und Englisch verfügbar.
 
 This document is available in German and English.
