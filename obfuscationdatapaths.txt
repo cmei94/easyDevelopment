@@ -4,3 +4,6 @@ easyEconomy\server\init\db_init.lua
 easyEconomy\server\init\db_initHelper.lua
 
 easyShop2.0\server\init\init.lua
+
+easyLicenseShop\server\init\init.lua
+easyLicenseShop\server\init\db_Helper.lua
