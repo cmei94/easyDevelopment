@@ -89,6 +89,12 @@ end)
 
 function AddLicense(xPlayer, licenseInfo, cancelLicenses)
     local identifier = xPlayer.getIdentifier()
+
+    if ActualLicenseDB[identifier] and ActualLicenseDB[identifier][licenseInfo.LicenseType] then
+        EasyCore.Logger.LogWarning(RessourceName, "AddLicense",
+            ("Player %s (Identifier: %s) is trying to purchase license '%s' which they already own according to 'ActualLicenseDB'. This might indicate a UI issue or a client-side logic error."):format(xPlayer.getName(), identifier, licenseInfo.LicenseType))
+    end
+
     TriggerEvent("esx_license:addLicense", xPlayer.source, licenseInfo.LicenseType)
 
     if not ActualLicenseDB[identifier] then

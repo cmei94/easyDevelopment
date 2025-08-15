@@ -70,36 +70,52 @@ local function PlayOpenTabletAnimation()
 end
 
 function LoadNeededInfos()
-    local playerData=ESX.GetPlayerData()
-    local playerInfos={}
+    local playerData = ESX.GetPlayerData()
+    local playerInfos = {}
 
-    playerInfos.Identifier=playerData.identifier
-    playerInfos.Accounts=playerData.accounts
-    playerInfos.FirstName=playerData.firstName
-    playerInfos.LastName=playerData.lastName    
-    --#region Licenses
-   
-    local p = promise.new()
+    playerInfos.Identifier = playerData.identifier
+    playerInfos.Accounts = playerData.accounts
+    playerInfos.FirstName = playerData.firstName
+    playerInfos.LastName = playerData.lastName
+    
+    local p1 = promise.new()
     ESX.TriggerServerCallback("easyLicenseShop:GetActualLicenseInfosForPlayer", function(cb)
-        p:resolve(cb)
+        p1:resolve(cb)
     end)
-    local shopPlayerLicenseInfos = Citizen.Await(p)
-    local p = promise.new()
+    local shopPlayerLicenseInfos = Citizen.Await(p1)
+
+    local p2 = promise.new()
     ESX.TriggerServerCallback("esx_license:getLicenses", function(cb)
-        p:resolve(cb)
-    end,GetPlayerServerId(PlayerId()))
-    local licenses = Citizen.Await(p)
-    playerInfos.Licenses={}
-    for k,v in pairs(licenses) do
-        playerInfos.Licenses[v.type]={}
-        if shopPlayerLicenseInfos and shopPlayerLicenseInfos[v.type]  then
-            playerInfos.Licenses[v.type].ExtendedInfos={
-                LastPayedTimeStamp=shopPlayerLicenseInfos[v.type]
+        p2:resolve(cb)
+    end, GetPlayerServerId(PlayerId()))
+    local esxLicenses = Citizen.Await(p2)
+
+    playerInfos.Licenses = {}
+    
+    local esxLicenseMap = {}
+    for _, lic in ipairs(esxLicenses) do
+        esxLicenseMap[lic.type] = true
+    end
+
+    for licenseType, licenseData in pairs(shopPlayerLicenseInfos) do
+        if esxLicenseMap[licenseType] then
+            playerInfos.Licenses[licenseType] = {
+                ExtendedInfos = {
+                    LastPayedTimeStamp = licenseData
+                }
             }
+        else
+            EasyCore.Logger.LogWarning(RessourceName, "LoadNeededInfos", 
+                ("Inconsistency found: License '%s' exists in the 'easy_licenses' DB but is not reported by 'esx_license'. Please check if the license exists in the 'licenses' table and is spelled correctly."):format(licenseType))
         end
     end
-    --#endregion
-   
+
+    for licenseType, _ in pairs(esxLicenseMap) do
+        if not playerInfos.Licenses[licenseType] then
+            playerInfos.Licenses[licenseType] = {}
+        end
+    end
+    
     return playerInfos
 end
 
@@ -131,23 +147,36 @@ end
 
 RegisterNUICallback('buyLicense', function(data, cb) 
     SetNuiFocus(false, false)
-    local cancelLicenses={}
+    local cancelLicenses = {}
+    
+    -- Logik für EnableOwnMultipleLicenses: Kündigt andere Lizenzen aus DIESEM Shop
     if not CurrentMarker.ShopInfos.EnableOwnMultipleLicenses then
         local playerData = LoadNeededInfos()
-        for k,v in pairs(CurrentMarker.ShopInfos.Licenses) do
-            for pL,pV in pairs(playerData.Licenses) do
-                if pL==k then
-                    table.insert(cancelLicenses, pL)
-                end
+        -- Iteriere durch alle Lizenzen, die der Spieler besitzt
+        for licenseOwned, _ in pairs(playerData.Licenses) do
+            -- Prüfe, ob die besessene Lizenz in diesem Shop verkauft wird
+            if CurrentMarker.ShopInfos.Licenses[licenseOwned] then
+                -- Füge sie zur Kündigungsliste hinzu
+                table.insert(cancelLicenses, licenseOwned)
             end
         end
     end
-    local licenseInfo={
-        LicenseType=data,
-        Price=CurrentMarker.ShopInfos.Licenses[data].Price,
-        IntervalInHours=CurrentMarker.ShopInfos.Licenses[data].PayIntervalInHours,
-        LicenseName=CurrentMarker.ShopInfos.Licenses[data].Name,
+
+    local licenseInfo = {
+        LicenseType = data,
+        Price = CurrentMarker.ShopInfos.Licenses[data].Price,
+        IntervalInHours = CurrentMarker.ShopInfos.Licenses[data].PayIntervalInHours,
+        LicenseName = CurrentMarker.ShopInfos.Licenses[data].Name,
     }
+
+    -- WICHTIG: Entferne die Lizenz, die gerade gekauft wird, aus der Kündigungsliste.
+    -- Dies verhindert, dass man eine Lizenz kauft, die man bereits hat, und sie dabei aus Versehen kündigt.
+    for i = #cancelLicenses, 1, -1 do
+        if cancelLicenses[i] == licenseInfo.LicenseType then
+            table.remove(cancelLicenses, i)
+        end
+    end
+
     TriggerServerEvent("easyLicenseShop:BuyAndAddLicenseToPlayer", licenseInfo, cancelLicenses)
     CloseTablet()
 end)
